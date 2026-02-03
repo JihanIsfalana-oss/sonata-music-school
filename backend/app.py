@@ -1,4 +1,4 @@
-from flask import request, jsonify
+from flask import Flask, jsonify, request
 from src import create_app, db
 # Menyesuaikan dengan struktur folder kamu:
 from src.models.student import Student 
