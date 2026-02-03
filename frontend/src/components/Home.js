@@ -9,10 +9,11 @@ const Home = () => {
   const [toast, setToast] = useState({ show: false, msg: '' });
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/info')
-      .then(res => setInfo(res.data))
-      .catch(err => console.error(err));
-  }, []);
+  // Tambahkan https:// di awal URL
+  axios.get('https://sonata-music-school-production.up.railway.app/api/info')
+    .then(res => setInfo(res.data))
+    .catch(err => console.error(err));
+}, []);
 
   const triggerToast = (msg) => {
     setToast({ show: true, msg });
@@ -41,10 +42,10 @@ const Home = () => {
         const powerSimulated = Math.min(Math.max(Math.round(Math.max(...dataArray) / 20), 1), 10);
 
         try {
-          const res = await axios.post('http://localhost:5000/api/predict-vocal', {
-            pitch: pitchSimulated,
-            power: powerSimulated
-          });
+          const res = await axios.post('https://sonata-music-school-production.up.railway.app/api/predict-vocal', {
+          pitch: pitchSimulated,
+          power: powerSimulated
+        });
           setAiResult(res.data.message);
         } catch (err) {
           triggerToast("Gagal memproses suara.");
