@@ -10,8 +10,9 @@ import numpy as np
 load_dotenv()
 
 # Gunakan create_app() saja, hapus baris app = Flask(__name__)
-app = create_app()
-CORS(app) 
+app = Flask(__name__)
+# Izinkan semua origin agar lebih mudah saat testing
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # --- FUNGSI HAPUS MURID ---
 @app.route('/api/students/<int:id>', methods=['DELETE'])
