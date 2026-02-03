@@ -1,3 +1,37 @@
 *.exe 
 Data murid baru.txt 
 .vscode/ 
+
+# Python Environment
+venv/
+__pycache__/
+*.pyc
+
+# Environment Variables (Sangat Penting!)
+.env
+
+# Flask & IDE
+instance/
+.pytest_cache/
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Python virtual environment
+backend/venv/
+__pycache__/
+*.pyc
+
+# Node modules (React)
+node_modules/
+build/
+
+# Environment variables
+.env
+
+# Ide files
+.vscode/
+.idea/

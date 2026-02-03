@@ -1,0 +1,48 @@
+.flex-container {
+    display: flex;
+    justify-content: center;
+    align-items: stretch; /* Membuat tinggi kotak kiri dan kanan sama */
+    gap: 20px;
+    width: 100%;
+    max-width: 1000px;
+    margin: 40px auto;
+}
+
+.info-card {
+    flex: 1;
+    background: rgba(30, 30, 30, 0.6);
+    border: 1px solid #e63946;
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100%;
+}
+
+.video-container {
+    width: 100%;
+    margin: 15px 0;
+}
+
+.video-container iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 8px;
+}
+
+.ai-result-tag {
+    margin-top: 15px;
+    color: #ffb703;
+    font-weight: bold;
+    padding: 10px;
+    border: 1px dashed #ffb703;
+    border-radius: 5px;
+}
