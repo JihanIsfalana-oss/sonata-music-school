@@ -1,19 +1,34 @@
 from flask import Flask, jsonify, request
 from src import create_app, db
-# Menyesuaikan dengan struktur folder kamu:
 from src.models.student import Student 
 from flask_cors import CORS
 from dotenv import load_dotenv
 from sklearn.neighbors import KNeighborsClassifier
 import numpy as np
+import os
 
 load_dotenv()
 
-# Gunakan create_app() saja, hapus baris app = Flask(__name__)
-app = Flask(__name__)
-# Izinkan semua origin agar lebih mudah saat testing
-CORS(app, resources={r"/api/*": {"origins": "*"}})
+# JANGAN buat app = Flask(__name__) lagi.
+# Gunakan fungsi create_app yang sudah kamu buat di folder src.
+app = create_app() 
 
+# Izinkan CORS untuk semua jalur agar Vercel bisa masuk
+CORS(app, resources={r"/*": {"origins": "*"}})
+
+# --- ROUTE UNTUK INFO (Penting agar Vercel tidak stuck Loading) ---
+@app.route('/api/info', methods=['GET'])
+def get_info():
+    return jsonify({
+        "vision": "Menjadi sekolah musik pilihan utama yang menghasilkan maestro berbakat.",
+        "contact": "Jl. Musik No. 123, Jakarta",
+        "teachers": [
+            {"id": 1, "name": "Maestro Jihan", "genre": "Rock", "instrument": "Electric Guitar"},
+            {"id": 2, "name": "Prof. Isfalana", "genre": "Pop", "instrument": "Piano"}
+        ]
+    })
+
+# ... (lanjutkan dengan route delete, update, dan predict_vocal kamu di bawahnya)
 # --- FUNGSI HAPUS MURID ---
 @app.route('/api/students/<int:id>', methods=['DELETE'])
 def delete_student(id):
