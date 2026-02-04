@@ -1,19 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Home.css';
+import TeacherModal from './TeacherModal';
 
 const Home = () => {
   const [info, setInfo] = useState(null);
   const [aiResult, setAiResult] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [toast, setToast] = useState({ show: false, msg: '' });
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
+
+  // LOGIKA URL FLEKSIBEL: Otomatis deteksi Lokal atau Production (Railway)
+  const API_BASE_URL = process.env.NODE_ENV === 'production' 
+    ? 'https://sonata-music-school-production.up.railway.app' 
+    : 'http://localhost:5000';
 
   useEffect(() => {
-  // Tambahkan https:// di awal URL
-  axios.get('https://sonata-music-school-production.up.railway.app/api/info')
-    .then(res => setInfo(res.data))
-    .catch(err => console.error(err));
-}, []);
+    // Mengambil data info sekolah dan daftar guru
+    axios.get(`${API_BASE_URL}/api/info`)
+      .then(res => setInfo(res.data))
+      .catch(err => {
+        console.error(err);
+        triggerToast("Gagal mengambil data dari server.");
+      });
+  }, [API_BASE_URL]);
 
   const triggerToast = (msg) => {
     setToast({ show: true, msg });
@@ -42,10 +52,11 @@ const Home = () => {
         const powerSimulated = Math.min(Math.max(Math.round(Math.max(...dataArray) / 20), 1), 10);
 
         try {
-          const res = await axios.post('https://sonata-music-school-production.up.railway.app/api/predict-vocal', {
-          pitch: pitchSimulated,
-          power: powerSimulated
-        });
+          // Menggunakan API_BASE_URL agar tetap jalan di Vercel
+          const res = await axios.post(`${API_BASE_URL}/api/predict-vocal`, {
+            pitch: pitchSimulated,
+            power: powerSimulated
+          });
           setAiResult(res.data.message);
         } catch (err) {
           triggerToast("Gagal memproses suara.");
@@ -69,13 +80,13 @@ const Home = () => {
         <p className="address">📍 {info.contact}</p>
       </div>
       
-      {/* SEKSI TABEL */}
+      {/* SEKSI TABEL GURU */}
       <div className="table-section">
         <h3>Riwayat Guru & Spesialisasi</h3>
         <table className="table-custom">
           <thead>
             <tr>
-              <th>Nama Guru</th>
+              <th>Nama Guru (Klik untuk Detail)</th>
               <th>Kelas (Genre)</th>
               <th>Spesialisasi Alat</th>
             </tr>
@@ -83,7 +94,12 @@ const Home = () => {
           <tbody>
             {info.teachers.map(t => (
               <tr key={t.id}>
-                <td>{t.name}</td>
+                <td 
+                  onClick={() => setSelectedTeacher(t)} 
+                  className="teacher-name-link"
+                >
+                  {t.name}
+                </td>
                 <td>{t.genre}</td>
                 <td>{t.instrument}</td>
               </tr>
@@ -92,7 +108,15 @@ const Home = () => {
         </table>
       </div>
 
-      {/* SEKSI AI & RADIO BERJEJER */}
+      {/* RENDER MODAL ROCKER */}
+      {selectedTeacher && (
+        <TeacherModal 
+          teacher={selectedTeacher} 
+          onClose={() => setSelectedTeacher(null)} 
+        />
+      )}
+
+      {/* SEKSI AI & RADIO */}
       <div className="flex-container">
         <div className="info-card ai-card">
           <div className="card-content">
