@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Home.css';
+import TeacherModal from './TeacherModal';
 
 const Home = () => {
   const [info, setInfo] = useState(null);
   const [aiResult, setAiResult] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [toast, setToast] = useState({ show: false, msg: '' });
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
 
   useEffect(() => {
     axios.get('http://localhost:5000/api/info')
@@ -74,7 +76,7 @@ const Home = () => {
         <table className="table-custom">
           <thead>
             <tr>
-              <th>Nama Guru</th>
+              <th>Nama Guru (Klik untuk Detail)</th> {/* Beri petunjuk user */}
               <th>Kelas (Genre)</th>
               <th>Spesialisasi Alat</th>
             </tr>
@@ -82,7 +84,13 @@ const Home = () => {
           <tbody>
             {info.teachers.map(t => (
               <tr key={t.id}>
-                <td>{t.name}</td>
+                {/* Tambahkan onClick disini */}
+                <td 
+                  onClick={() => setSelectedTeacher(t)} 
+                  style={{ cursor: 'pointer', color: '#007bff', fontWeight: 'bold' }}
+                >
+                  {t.name}
+                </td>
                 <td>{t.genre}</td>
                 <td>{t.instrument}</td>
               </tr>
@@ -90,6 +98,14 @@ const Home = () => {
           </tbody>
         </table>
       </div>
+
+      {/* RENDER MODAL DISINI */}
+      {selectedTeacher && (
+        <TeacherModal 
+          teacher={selectedTeacher} 
+          onClose={() => setSelectedTeacher(null)} 
+        />
+      )}
 
       {/* SEKSI AI & RADIO BERJEJER */}
       <div className="flex-container">
