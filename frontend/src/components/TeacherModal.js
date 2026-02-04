@@ -23,12 +23,14 @@ const TeacherModal = ({ teacher, onClose }) => {
               <td>{teacher.kemampuan}</td>
             </tr>
             <tr>
-              <td style={styles.label}><strong>Genre</strong></td>
-              <td>
-                {teacher.genre.map((g, idx) => (
-                  <span key={idx} style={styles.tag}>{g}</span>
-                ))}
-              </td>
+            <td style={styles.label}><strong>Genre</strong></td>
+                <td>
+                    {/* Kita cek dulu: kalau dia array pakai .map, kalau bukan tampilkan langsung */}
+                    {Array.isArray(teacher.genre) 
+                    ? teacher.genre.map((g, idx) => <span key={idx} style={styles.tag}>{g}</span>) 
+                    : <span style={styles.tag}>{teacher.genre}</span>
+                    }
+                </td>
             </tr>
             <tr>
               <td style={styles.label}><strong>Referensi Bermusik</strong></td>
