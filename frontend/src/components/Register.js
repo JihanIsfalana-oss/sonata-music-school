@@ -18,7 +18,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/register', formData);
+      await axios.post('https://sonata-music-school-production.up.railway.app/api/register', formData);
       alert('Pendaftaran Berhasil! Guru telah ditentukan otomatis.');
       navigate('/students');
     } catch (error) {
