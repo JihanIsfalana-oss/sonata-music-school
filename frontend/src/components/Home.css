@@ -47,20 +47,85 @@
     border-radius: 5px;
 }
 
-.modal-overlay {
+/* Overlay dengan efek blur gahar */
+.rocker-modal-overlay {
   position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(5px);
   display: flex; justify-content: center; align-items: center;
-  z-index: 2000;
+  z-index: 9999;
 }
-.modal-content {
-  background: white; padding: 30px; border-radius: 12px;
-  max-width: 600px; width: 90%; position: relative;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+
+/* Kotak Modal bertema Hitam-Merah */
+.rocker-modal-content {
+  background: #1a1a1a;
+  border: 3px solid #ff0040; /* Merah menyala */
+  box-shadow: 0 0 20px rgba(255, 0, 64, 0.5);
+  padding: 0;
+  border-radius: 0; /* Boxy terlihat lebih gahar */
+  width: 90%;
+  max-width: 700px;
+  color: #fff;
+  font-family: 'Oswald', sans-serif; /* Jika kamu punya font tegas */
 }
-.close-button {
-  position: absolute; top: 10px; right: 15px;
-  background: none; border: none; font-size: 24px; cursor: pointer;
+
+/* Header Modal */
+.rocker-modal-header {
+  background: #ff0040;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-.table-custom td { padding: 12px; border-bottom: 1px solid #eee; }
+
+.rocker-modal-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+  color: #000;
+}
+
+.rocker-close-btn {
+  background: #000;
+  color: #ff0040;
+  border: 1px solid #000;
+  padding: 5px 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.rocker-close-btn:hover {
+  background: #fff;
+  color: #000;
+}
+
+/* Tabel di dalam Modal */
+.rocker-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.rocker-table td {
+  padding: 15px 20px;
+  border-bottom: 1px solid #333;
+  text-transform: uppercase;
+}
+
+.highlight-text {
+  color: #ff0040;
+  font-weight: bold;
+}
+
+.rocker-tag {
+  background: #333;
+  padding: 3px 10px;
+  border-radius: 4px;
+  margin-right: 5px;
+  font-size: 0.8rem;
+  border: 1px solid #ff0040;
+}
+
+.rocker-modal-body {
+  padding: 10px;
+}

@@ -3,67 +3,58 @@ import React from 'react';
 const TeacherModal = ({ teacher, onClose }) => {
   if (!teacher) return null;
 
-  return (
-    <div style={styles.overlay}>
-      <div style={styles.modal}>
-        <button onClick={onClose} style={styles.closeBtn}>&times; Tutup</button>
-        
-        <h2 style={{ borderBottom: '2px solid #333', paddingBottom: '10px' }}>
-          Profil Guru: {teacher.nama}
-        </h2>
+  // Data tambahan untuk memperkaya profil
+  const extraInfo = {
+    riwayat: "Lulusan Seni Musik Universitas dengan pengalaman panggung metal internasional.",
+    kemampuan: "Expert di instrumen utama, teori musik, & stage performance.",
+    referensi: "Eddie Van Halen, Dream Theater, Jimi Hendrix"
+  };
 
-        <table style={styles.table}>
-          <tbody>
-            <tr>
-              <td style={styles.label}><strong>Riwayat Hidup</strong></td>
-              <td>{teacher.riwayat}</td>
-            </tr>
-            <tr>
-              <td style={styles.label}><strong>Kemampuan</strong></td>
-              <td>{teacher.kemampuan}</td>
-            </tr>
-            <tr>
-            <td style={styles.label}><strong>Genre</strong></td>
+  return (
+    <div className="rocker-modal-overlay" onClick={onClose}>
+      <div className="rocker-modal-content" onClick={e => e.stopPropagation()}>
+        <div className="rocker-modal-header">
+          <h2>PROFIL GURU: {teacher.name.toUpperCase()} 🔥🎸</h2>
+          <button className="rocker-close-btn" onClick={onClose}>CLOSE</button>
+        </div>
+        
+        <div className="rocker-modal-body">
+          <table className="rocker-table">
+            <tbody>
+              <tr>
+                <td><strong>NAMA</strong></td>
+                <td className="highlight-text">{teacher.name}</td>
+              </tr>
+              <tr>
+                <td><strong>SPESIALISASI</strong></td>
+                <td>{teacher.instrument}</td>
+              </tr>
+              <tr>
+                <td><strong>GENRE UTAMA</strong></td>
                 <td>
-                    {/* Kita cek dulu: kalau dia array pakai .map, kalau bukan tampilkan langsung */}
-                    {Array.isArray(teacher.genre) 
-                    ? teacher.genre.map((g, idx) => <span key={idx} style={styles.tag}>{g}</span>) 
-                    : <span style={styles.tag}>{teacher.genre}</span>
-                    }
+                  {Array.isArray(teacher.genre) 
+                    ? teacher.genre.map((g, i) => <span key={i} className="rocker-tag">{g}</span>)
+                    : <span className="rocker-tag">{teacher.genre}</span>}
                 </td>
-            </tr>
-            <tr>
-              <td style={styles.label}><strong>Referensi Bermusik</strong></td>
-              <td>{teacher.referensi}</td>
-            </tr>
-          </tbody>
-        </table>
+              </tr>
+              <tr>
+                <td><strong>RIWAYAT</strong></td>
+                <td>{extraInfo.riwayat}</td>
+              </tr>
+              <tr>
+                <td><strong>KEMAMPUAN</strong></td>
+                <td>{extraInfo.kemampuan}</td>
+              </tr>
+              <tr>
+                <td><strong>REFERENSI MUSIK</strong></td>
+                <td className="highlight-text">{extraInfo.referensi}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
-};
-
-// Styling sederhana (CSS-in-JS) agar tidak perlu buat file CSS terpisah dulu
-const styles = {
-  overlay: {
-    position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.7)', display: 'flex', 
-    justifyContent: 'center', alignItems: 'center', zIndex: 1000
-  },
-  modal: {
-    backgroundColor: '#fff', padding: '20px', borderRadius: '8px',
-    maxWidth: '500px', width: '90%', boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-  },
-  closeBtn: {
-    float: 'right', border: 'none', background: 'transparent', 
-    fontSize: '1.5rem', cursor: 'pointer', color: '#ff4444'
-  },
-  table: { width: '100%', marginTop: '20px', borderCollapse: 'collapse' },
-  label: { width: '30%', padding: '10px', verticalAlign: 'top', color: '#555' },
-  tag: { 
-    display: 'inline-block', padding: '2px 8px', margin: '2px', 
-    borderRadius: '12px', backgroundColor: '#e0e0e0', fontSize: '0.85rem' 
-  }
 };
 
 export default TeacherModal;
