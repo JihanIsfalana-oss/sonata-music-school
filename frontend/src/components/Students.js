@@ -7,7 +7,7 @@ const Students = () => {
   const [notification, setNotification] = useState({ show: false, message: '', type: '' });
 
   const fetchStudents = () => {
-    axios.get('http://localhost:5000/api/students')
+    axios.get('https://sonata-music-school-production.up.railway.app/api/students')
       .then(res => setStudents(res.data))
       .catch(err => console.error(err));
   };
@@ -24,7 +24,7 @@ const Students = () => {
   const deleteStudent = async (id) => {
     if (window.confirm("Yakin mau hapus musisi ini?")) {
       try {
-        await axios.delete(`http://localhost:5000/api/students/${id}`);
+        await axios.delete(`https://sonata-music-school-production.up.railway.app/api/students/${id}`);
         setStudents(students.filter(s => s.id !== id));
         showToast("Berhasil terhapus! 🗑️", "success");
       } catch (error) {
@@ -37,7 +37,7 @@ const Students = () => {
     const newName = prompt("Ubah Nama Murid:", student.name);
     if (newName) {
       try {
-        await axios.put(`http://localhost:5000/api/students/${student.id}`, {
+        await axios.put(`https://sonata-music-school-production.up.railway.app/api/students/${student.id}`, {
           ...student,
           name: newName
         });
