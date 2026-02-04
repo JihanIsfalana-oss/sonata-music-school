@@ -10,11 +10,20 @@ const Home = () => {
   const [toast, setToast] = useState({ show: false, msg: '' });
   const [selectedTeacher, setSelectedTeacher] = useState(null);
 
+  // LOGIKA URL FLEKSIBEL: Otomatis deteksi Lokal atau Production (Railway)
+  const API_BASE_URL = process.env.NODE_ENV === 'production' 
+    ? 'https://sonata-music-school-production.up.railway.app' 
+    : 'http://localhost:5000';
+
   useEffect(() => {
-    axios.get('http://localhost:5000/api/info')
+    // Mengambil data info sekolah dan daftar guru
+    axios.get(`${API_BASE_URL}/api/info`)
       .then(res => setInfo(res.data))
-      .catch(err => console.error(err));
-  }, []);
+      .catch(err => {
+        console.error(err);
+        triggerToast("Gagal mengambil data dari server.");
+      });
+  }, [API_BASE_URL]);
 
   const triggerToast = (msg) => {
     setToast({ show: true, msg });
@@ -43,7 +52,8 @@ const Home = () => {
         const powerSimulated = Math.min(Math.max(Math.round(Math.max(...dataArray) / 20), 1), 10);
 
         try {
-          const res = await axios.post('http://localhost:5000/api/predict-vocal', {
+          // Menggunakan API_BASE_URL agar tetap jalan di Vercel
+          const res = await axios.post(`${API_BASE_URL}/api/predict-vocal`, {
             pitch: pitchSimulated,
             power: powerSimulated
           });
@@ -70,13 +80,13 @@ const Home = () => {
         <p className="address">📍 {info.contact}</p>
       </div>
       
-      {/* SEKSI TABEL */}
+      {/* SEKSI TABEL GURU */}
       <div className="table-section">
         <h3>Riwayat Guru & Spesialisasi</h3>
         <table className="table-custom">
           <thead>
             <tr>
-              <th>Nama Guru (Klik untuk Detail)</th> {/* Beri petunjuk user */}
+              <th>Nama Guru (Klik untuk Detail)</th>
               <th>Kelas (Genre)</th>
               <th>Spesialisasi Alat</th>
             </tr>
@@ -84,10 +94,9 @@ const Home = () => {
           <tbody>
             {info.teachers.map(t => (
               <tr key={t.id}>
-                {/* Tambahkan onClick disini */}
                 <td 
                   onClick={() => setSelectedTeacher(t)} 
-                  style={{ cursor: 'pointer', color: '#007bff', fontWeight: 'bold' }}
+                  className="teacher-name-link"
                 >
                   {t.name}
                 </td>
@@ -99,7 +108,7 @@ const Home = () => {
         </table>
       </div>
 
-      {/* RENDER MODAL DISINI */}
+      {/* RENDER MODAL ROCKER */}
       {selectedTeacher && (
         <TeacherModal 
           teacher={selectedTeacher} 
@@ -107,7 +116,7 @@ const Home = () => {
         />
       )}
 
-      {/* SEKSI AI & RADIO BERJEJER */}
+      {/* SEKSI AI & RADIO */}
       <div className="flex-container">
         <div className="info-card ai-card">
           <div className="card-content">
