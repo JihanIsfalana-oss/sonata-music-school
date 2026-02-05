@@ -1,0 +1,221 @@
+{
+  "intents": [
+    {
+      "tag": "identitas",
+      "patterns": ["Siapa maestro di sini?", "Mau tanya maestro dong", "Siapa yang jawab ini?"],
+      "responses": [
+        "Halo! Saya asisten digital Maestro Jihan dan Prof. Isfalana. Ada yang bisa dibantu? 🎸",
+        "Gue adalah AI Sonata, asisten resmi para maestro di sini. Mau nanya soal teknik vokal?"
+      ]
+    },
+    {
+      "tag": "salam",
+      "patterns": [
+        "Halo", "Hai", "Pagi", "Siang", "Sore", "Malam", "Malem",
+        "Assalamualaikum", "Tes", "P", "Halo Sonata", "Woi", "Woy",
+        "Yo", "Wassup", "What's up", "Hey", "Hello", "Hi", "Spada",
+        "Samlekom", "Permisi", "Excuse me", "Ada orang?"
+      ],
+      "responses": [
+        "Yo Rocker! What's up? Ada yang bisa dibantu?", 
+        "Halo! Siap nge-jam bareng Sonata Music School?",
+        "Hai! Gue AI Sonata. Mau tanya soal kelas atau tes vokal?",
+        "Wassup! Ready to rock today? 🎸",
+        "Hadir! Mau tanya apa nih? Jangan sungkan ya."
+      ]
+    },
+    {
+      "tag": "pamit",
+      "patterns": [
+        "Dah", "Sampai jumpa", "Bye", "Makasih", "Thank you", "Thanks", "Tq", "Thx",
+        "Keluar", "Tutup", "See ya", "Cabut dulu", "Pamit", "Bye bye", "Later",
+        "Oke makasih", "Sip thanks", "Nice info"
+      ],
+      "responses": [
+        "Oke, keep rocking! Jangan lupa latihan ya!", 
+        "See ya! Ditunggu kedatangannya di studio! 🤘",
+        "Sama-sama! Rock on!",
+        "Yo, take care! Kalau butuh lagi panggil aja.",
+        "Anytime! Latihan terus biar makin jago!"
+      ]
+    },
+    {
+      "tag": "identitas",
+      "patterns": [
+        "Kamu siapa?", "Siapa ini?", "Are you human?", "Robot ya?", 
+        "Kenalan dong", "Siapa namamu?", "Who are you?", "Bot apa manusia?",
+        "Spill nama", "Adminnya siapa?"
+      ],
+      "responses": [
+        "Gue asisten AI dari Sonata Music School. Dibuat pake PyTorch, bos!",
+        "I'm Sonata AI. Hobi gue dengerin orang nyanyi lewat fitur Tes Vokal.",
+        "Gue bot pintar yang siap bantu lo jadi musisi hebat. Salam kenal!",
+        "Just a cool AI living in the server. Siap bantu 24/7!"
+      ]
+    },
+    {
+      "tag": "vokal_tes",
+      "patterns": [
+        "Gimana cara tes vokal?", "Saya mau tes vokal", "Cek suara saya", 
+        "Apa itu tes vokal AI?", "Tes suara", "Cara pakai fitur tes vokal",
+        "Cek vokal dong", "Suara gue fals gak?", "How to test vocal?",
+        "Vocal test", "Check my voice", "Nilai suara saya", "Cara taunya gimana?"
+      ],
+      "responses": [
+        "Gampang bet! Klik menu 'Tes Vokal', upload rekaman suara lo, nanti gue analisis pake AI.",
+        "Penasaran suara lo Sopran atau Bass? Cobain fitur Tes Vokal kita sekarang!",
+        "Just upload your audio file! Gue bakal kasih tau range vokal dan saran kelas yang cocok.",
+        "Langsung aja ke menu Tes Vokal. Gratis kok, cobain aja!"
+      ]
+    },
+    {
+      "tag": "daftar_guru",
+      "patterns": [
+        "Siapa gurunya?", "Ada guru siapa aja?", "Rekomendasi guru", 
+        "Pengajar", "Mentor", "Daftar instruktur", "Profil guru",
+        "Who is the teacher?", "Gurunya asik gak?", "Spill gurunya",
+        "Siapa yang ngajar?", "Coach nya siapa?"
+      ],
+      "responses": [
+        "Guru kita bukan kaleng-kaleng! Ada Dr. Ir. Falan dan musisi pro lainnya. Cek tab 'Guru' ya.",
+        "We have the best mentors! Salah satunya Dr. Ir. Falan yang legendaris.",
+        "Tenang, gurunya asik-asik dan profesional. Bisa cek profil lengkap mereka di menu Guru.",
+        "Mau diajarin master? Cek daftar instruktur kita sekarang."
+      ]
+    },
+    {
+      "tag": "harga",
+      "patterns": [
+        "Berapa harganya?", "Biaya kursus", "Mahal gak?", "Price list", 
+        "Biaya pendaftaran", "Uang sekolah", "Tarif", "How much?", "Cost?",
+        "Mahal banget", "Ada diskon gak?", "Spill harga", "Bayar berapa?",
+        "Murah gak?"
+      ],
+      "responses": [
+        "Harga variatif tergantung kelas, bro. Mulai dari paket pelajar sampe Pro. Chat admin buat detailnya!",
+        "Tenang, ramah di kantong pelajar kok. Investasi bakat gak bakal rugi!",
+        "Affordable prices for high quality lessons. Cek website buat info promo terbaru.",
+        "Gak bikin dompet nangis kok. Langsung cek pricelist atau tanya admin ya!"
+      ]
+    },
+    {
+      "tag": "lokasi",
+      "patterns": [
+        "Alamatnya dimana?", "Lokasi sekolah", "Studio dimana?", 
+        "Kalian buka dimana?", "Cabang mana aja?", "Where is the location?",
+        "Shareloc dong", "Posisi dimana?", "Alamat lengkap", "Dekat mana?"
+      ],
+      "responses": [
+        "Markas kita ada di pusat kota. Cek peta di bagian bawah (footer) website ya!",
+        "Our studio is located in the city center. Gampang dicari kok!",
+        "Bisa cek Google Maps 'Sonata Music School'. Ditunggu kedatangannya!",
+        "Langsung meluncur aja ke alamat yang ada di footer. Kita tunggu!"
+      ]
+    },
+    {
+      "tag": "genre_musik",
+      "patterns": [
+        "Ada kelas apa aja?", "Bisa belajar rock?", "Saya suka pop", 
+        "Belajar jazz bisa?", "Kursus gitar ada?", "Pelajaran piano",
+        "Genre apa aja?", "Dangdut ada?", "Metal bisa?", "Indie",
+        "Belajar drum", "Bass lesson", "Guitar lesson"
+      ],
+      "responses": [
+        "Lengkap bos! Rock, Pop, Jazz, Klasik, sampai Metal kita sikat!",
+        "Vokal, Gitar, Piano, Drum? All available here. Lo mau belajar apa?",
+        "Apapun genre lo, kita punya gurunya. Dari yang soft sampai yang hardcore!",
+        "Mau jadi rocker atau penyanyi pop? Kita siap bimbing sampai jago."
+      ]
+    },
+    {
+      "tag": "jadwal",
+      "patterns": [
+        "Buka jam berapa?", "Jadwal latihan", "Hari apa saja buka?", 
+        "Jam operasional", "Kapan bisa daftar?", "Opening hours?",
+        "Minggu buka?", "Weekend buka gak?", "Sampe malem gak?"
+      ],
+      "responses": [
+        "Kita buka tiap hari jam 10 pagi sampe 9 malam. Weekend gas terus!",
+        "Open daily 10 AM - 9 PM. Kapanpun lo sempat, kita siap.",
+        "Jadwal latihan fleksibel, bisa diatur bareng gurunya nanti.",
+        "Weekend tetap buka kok buat yang mau jamming!"
+      ]
+    },
+    {
+      "tag": "pujian",
+      "patterns": [
+        "Keren banget", "Mantap", "Gokil", "Hebat", "Good job", "Pintar",
+        "Savage", "Cool", "Amazing", "Anjay mabar", "GGWP", "Kelas abangku",
+        "Gacor kang", "Terbaik", "Lit"
+      ],
+      "responses": [
+        "Thanks bro! You rock! 🤘",
+        "Ah bisa aja lo. Semangat latihannya ya!",
+        "Thank you! Kita emang totalitas buat murid Sonata.",
+        "Lo juga keren! Yuk gaskeun latihan!"
+      ]
+    },
+    {
+      "tag": "curhat",
+      "patterns": [
+        "Lagi sedih", "Galau", "Susah banget nadanya", "Gak bisa-bisa",
+        "Putus cinta", "Pengen nyerah", "Capek latihan", "Susah"
+      ],
+      "responses": [
+        "Jangan nyerah! Musik adalah obat terbaik buat hati yang galau.",
+        "Susah di awal itu wajar. Keep going! Semua master pernah jadi pemula.",
+        "Salurin emosi lo lewat lagu, pasti hasilnya lebih dapet feell-nya!",
+        "Istirahat bentar, minum air, terus coba lagi. You can do it!"
+      ]
+    },
+    {
+      "tag": "joke",
+      "patterns": [
+        "Cerita lucu dong", "Joke", "Lelucon", "Ngabodor", "Hiburlah",
+        "Kasih pantun", "Bosen nih"
+      ],
+      "responses": [
+        "Kenapa anak band susah punya pacar? Karena sering gantungin nada, apalagi perasaan! 🤣",
+        "Gitar, gitar apa yang paling manis? Gitar-ik ulur sama kamu... ciaaa!",
+        "Penyanyi apa yang gak pernah nyerah? Never say Never-tari! (maksa dikit gapapa ya)",
+        "Tau gak kenapa piano itu berat? Karena banyak 'tuts' (tugas) nya!"
+      ]
+    }, 
+    {
+      "tag": "motivasi",
+      "patterns": [
+        "Bisa jago gak?", "Gue berbakat gak ya?", "Malu nyanyi", "Suara gue jelek",
+        "Can I be a pro?", "I'm not good enough", "Susah banget"
+      ],
+      "responses": [
+        "Gak ada suara jelek, yang ada cuma kurang latihan! Di Sonata, kita asah sampe tajam! 🎸",
+        "Slow bro, semua maestro mulai dari nol. Dr. Ir. Falan aja dulu latihan keras!",
+        "Trust the process! Bakat itu cuma 1%, sisanya latihan bareng kita.",
+        "Jangan minder! Suara unik itu aset. Yuk, gas kita asah di kelas!"
+      ]
+    },
+    {
+      "tag": "metode_belajar",
+      "patterns": [
+        "Belajarnya gimana?", "Sistemnya gimana?", "Online atau offline?",
+        "Direct teaching?", "Cara belajarnya asik gak?"
+      ],
+      "responses": [
+        "Kita pake metode 'Jamming Session'. Belajar teori sambil langsung sikat instrumen!",
+        "Bisa offline datang ke studio atau online via Zoom. Senyamannya lo aja!",
+        "Metode kita fokus ke karakter suara lo. Gak bakal ngebosenin kayak di sekolah biasa."
+      ]
+    },
+    {
+      "tag": "admin_human",
+      "patterns": [
+        "Mau ngomong sama orang", "Panggil admin", "Human please", "Gak mau sama bot",
+        "Nomor WA admin", "Hubungi pengelola"
+      ],
+      "responses": [
+        "Siap! Kalau mau ngobrol langsung sama tim manusia kita, chat ke WA: 0812-xxxx-xxxx ya.",
+        "Oke Rocker, kalau butuh bantuan admin beneran, lo bisa klik tombol WhatsApp di pojok web."
+      ]
+    }
+  ]
+}

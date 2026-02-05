@@ -6,18 +6,44 @@ from dotenv import load_dotenv
 from sklearn.neighbors import KNeighborsClassifier
 import numpy as np
 import os
+import torch
+import random
+import json
+
+# Import utilitas AI yang kita buat di ai_env
+from ai_engine import SonataChatNet
+from nltk_utils import bag_of_words, tokenize
 
 load_dotenv()
 
-# JANGAN buat app = Flask(__name__) lagi.
-# Gunakan fungsi create_app yang sudah kamu buat di folder src.
 app = create_app() 
-
-# Izinkan CORS untuk semua jalur agar Vercel bisa masuk
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-# --- ROUTE UNTUK INFO (Penting agar Vercel tidak stuck Loading) ---
-@app.route('/api/info', methods=['GET'])
+# --- SETUP AI CHATBOT (PYTORCH) ---
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+# Load data dan model chatbot
+with open('intents.json', 'r') as f:
+    intents = json.load(f)
+
+CHAT_MODEL_FILE = "models/chatbot_model.pth"
+chat_data = torch.load(CHAT_MODEL_FILE)
+chat_model = SonataChatNet(chat_data["input_size"], chat_data["hidden_size"], chat_data["output_size"]).to(device)
+chat_model.load_state_dict(chat_data["model_state"])
+chat_model.eval()
+
+# --- MODEL LAMA (KNN) TETAP DIPERTAHANKAN ---
+X_train_vocal = np.array([[3, 8], [4, 9], [2, 7], [8, 4], [9, 5], [7, 3], [5, 5], [6, 6], [5, 4]])
+y_train_vocal = ['Rock', 'Rock', 'Rock', 'Opera', 'Opera', 'Opera', 'Pop', 'Pop', 'Pop']
+model_vokal = KNeighborsClassifier(n_neighbors=3)
+model_vokal.fit(X_train_vocal, y_train_vocal)
+
+# --- ROUTES ---
+@app.route('/')
+def home():
+    return jsonify({"message": "Backend Sonata Music School Aktif!", "status": "Ready"})
+
+@app.route('/api/info', methods=['POST'])
 def get_info():
     return jsonify({
         "vision": "Menjadi sekolah musik pilihan utama yang menghasilkan maestro berbakat.",
@@ -28,14 +54,51 @@ def get_info():
         ]
     })
 
-# ... (lanjutkan dengan route delete, update, dan predict_vocal kamu di bawahnya)
-# --- FUNGSI HAPUS MURID ---
+# Route Chatbot Baru (Menggunakan PyTorch)
+@app.route('/test-chat', methods=['GET', 'POST']) # Tambahkan GET di sini
+def chat():
+    if request.method == 'GET':
+        return jsonify({"status": "Chatbot is active! Use POST to talk to me."})
+    data = request.json
+    user_text = data.get("message")
+    
+    if not user_text:
+        return jsonify({"reply": "Ketik sesuatu dong, Rocker!"}), 400
+
+    sentence = tokenize(user_text)
+    X = bag_of_words(sentence, chat_data["all_words"])
+    X = X.reshape(1, X.shape[0])
+    X = torch.from_numpy(X).to(device)
+
+    output = chat_model(X)
+    _, predicted = torch.max(output, dim=1)
+    tag = chat_data['tags'][predicted.item()]
+
+    probs = torch.softmax(output, dim=1)
+    prob = probs[0][predicted.item()]
+
+    if prob.item() > 0.75:
+        for intent in intents['intents']:
+            if tag == intent["tag"]:
+                return jsonify({"reply": random.choice(intent['responses'])})
+    
+    return jsonify({"reply": "Waduh, gue belum belajar soal itu. Coba tanya yang lain, Rocker!"})
+
+@app.route('/api/predict-vocal', methods=['POST'])
+def predict_vocal():
+    data = request.json
+    pitch = data.get('pitch')
+    power = data.get('power')
+    prediction = model_vokal.predict([[pitch, power]])
+    return jsonify({
+        "recommended_class": prediction[0],
+        "message": f"Berdasarkan AI, kamu sangat cocok di kelas {prediction[0]}!"
+    })
+
 @app.route('/api/students/<int:id>', methods=['DELETE'])
 def delete_student(id):
     try:
-        # Cara ini lebih stabil untuk Flask-SQLAlchemy terbaru
         student = db.session.get(Student, id) 
-        
         if student:
             db.session.delete(student)
             db.session.commit()
@@ -43,51 +106,28 @@ def delete_student(id):
         return jsonify({"error": "Data tidak ditemukan"}), 404
     except Exception as e:
         db.session.rollback()
-        print(f"Error: {e}") # Cek pesan ini di terminal VS Code jika masih gagal
         return jsonify({"error": str(e)}), 500
 
-# --- ROUTE UNTUK EDIT ---
 @app.route('/api/students/<int:id>', methods=['PUT'])
 def update_student(id):
     try:
         student = db.session.get(Student, id)
         data = request.json
         if student:
-            # Update nama
             student.name = data.get('name', student.name)
-            # Kamu bisa tambah field lain di sini, contoh:
-            # student.age = data.get('age', student.age)
-            
             db.session.commit()
             return jsonify({"message": "Data berhasil diupdate"}), 200
         return jsonify({"error": "Data tidak ditemukan"}), 404
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
-    
-X_train = np.array([[3, 8], [4, 9], [2, 7],   # Karakter Rock
-                    [8, 4], [9, 5], [7, 3],   # Karakter Opera
-                    [5, 5], [6, 6], [5, 4]])  # Karakter Pop
-y_train = ['Rock', 'Rock', 'Rock', 'Opera', 'Opera', 'Opera', 'Pop', 'Pop', 'Pop']
 
-# Inisialisasi Model
-model_vokal = KNeighborsClassifier(n_neighbors=3)
-model_vokal.fit(X_train, y_train)
-
-@app.route('/api/predict-vocal', methods=['POST'])
-def predict_vocal():
-    data = request.json
-    pitch = data.get('pitch')
-    power = data.get('power')
-    
-    # Prediksi
-    prediction = model_vokal.predict([[pitch, power]])
-    return jsonify({
-        "recommended_class": prediction[0],
-        "message": f"Berdasarkan AI, kamu sangat cocok di kelas {prediction[0]}!"
-    })
+# Tambahkan ini untuk melihat semua alamat yang terdaftar di terminal
+print("\n--- DAFTAR ALAMAT API KAMU ---")
+for rule in app.url_map.iter_rules():
+    print(f"Alamat: {rule.rule} --> Fungsi: {rule.endpoint}")
+print("------------------------------\n")
 
 if __name__ == "__main__":
-    import os
     port = int(os.environ.get("PORT", 8080))
     app.run(host='0.0.0.0', port=port)

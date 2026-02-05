@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Home from './components/Home';      // Pastikan path sesuai
 import Register from './components/Register'; // Pastikan path sesuai
 import Students from './components/Students'; // Pastikan path sesuai
-import ChatBot from './components/ChatBot';
+import ChatbotSonata from './components/ChatbotSonata';
 import './App.css';
 
 function App() {
@@ -43,38 +43,33 @@ function App() {
       ></div>
 
       <div className="app-container">
-        <nav className="navbar">
-          <h1>SONATA MUSIC SCHOOL</h1>
-          <div className="links">
-            <Link to="/">Home</Link>
-            <Link to="/register">Join Class</Link>
-            <Link to="/students">Students</Link>
-            
-          </div>
-        </nav>
-
-        <div className="content">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/students" element={<Students />} />
-          </Routes>
-          {/* ChatBot biarkan di sini, tapi pastikan isinya hanya FAB & Fullscreen Overlay */}
-          
+      <nav className="navbar">
+        <h1>SONATA MUSIC SCHOOL</h1>
+        <div className="links">
+          <Link to="/">Home</Link>
+          <Link to="/register">Join Class</Link>
+          <Link to="/students">Students</Link>
         </div>
+      </nav>
 
-        {/* --- BAGIAN BARU: FOOTER DENGAN NAMA ANDA --- */}
-        <footer className="footer-rock">
-          <p>
-            &copy; 2026 Created by <span className="neon-name">Mochammad Jihan Isfalana</span>
-          </p>
-        </footer>
-        {/* --------------------------------------------- */}
-
+      <div className="content">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/students" element={<Students />} />
+        </Routes>
       </div>
-      <ChatBot /> 
-    </Router>
+
+      <footer className="footer-rock">
+        <p>
+          &copy; 2026 Created by <span className="neon-name">Mochammad Jihan Isfalana</span>
+        </p>
+      </footer>
+    </div>
     
+    {/* Hapus <ChatBot /> yang lama agar tidak double tombol di layar */}
+    <ChatbotSonata /> 
+    </Router>
   );
 }
 

@@ -35,3 +35,12 @@ build/
 # Ide files
 .vscode/
 .idea/
+
+backend/ai_env/
+node_modules/
+.env
+__pycache__/
+*.pyc
+.DS_Store
+
+frontend-mobile/
