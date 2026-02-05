@@ -7,5 +7,6 @@ joblib
 numpy
 pandas
 gunicorn
-torch
 nltk
+--find-links https://download.pytorch.org/whl/cpu/torch_stable.html
+torch==2.5.1+cpu
