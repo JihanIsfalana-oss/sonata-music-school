@@ -1,3 +1,4 @@
+--index-url https://pypi.org/simple
 flask
 flask-cors
 flask-sqlalchemy
@@ -8,5 +9,5 @@ numpy
 pandas
 gunicorn
 nltk
---index-url https://download.pytorch.org/whl/cpu
+--extra-index-url https://download.pytorch.org/whl/cpu
 torch==2.5.1
