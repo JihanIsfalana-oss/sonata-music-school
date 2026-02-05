@@ -8,4 +8,4 @@ numpy
 pandas
 gunicorn
 nltk
-torch
+torch==2.4.0 --index-url https://download.pytorch.org/whl/cpu
