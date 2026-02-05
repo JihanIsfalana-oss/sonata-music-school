@@ -7,3 +7,5 @@ joblib
 numpy
 pandas
 gunicorn
+torch
+nltk
