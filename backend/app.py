@@ -77,8 +77,8 @@ def chat():
             return jsonify({"reply": "Waduh, sinyal studio lagi distorsi nih. Coba tanya lagi, Rocker!"})
             
     except Exception as e:
-        print(f"ERROR GEMINI: {str(e)}")
-        return jsonify({"reply": "Gue lagi tuning gitar, coba tanya lagi sebentar lagi ya!"})
+        print(f"DEBUG_PENTING: {str(e)}") # Ini akan muncul di log Railway
+        return jsonify({"reply": f"Error: {str(e)}"}) # Sementara tampilkan errornya di chat
 
 @app.route('/api/predict-vocal', methods=['POST'])
 def predict_vocal():
