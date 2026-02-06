@@ -85,21 +85,34 @@ def chat():
     probs = torch.softmax(output, dim=1)
     prob = probs[0][predicted.item()]
 
-    # Jika PyTorch yakin dengan jawabannya (> 0.75)
-    if prob.item() > 0.95:
+    # --- LOGIKA BARU YANG LEBIH PINTAR ---
+    # Kita naikkan batas keyakinan ke 0.90 (90%) agar lebih akurat
+    # Dan kita pastikan tag-nya bukan cuma tebakan random
+    if prob.item() > 0.98:
         for intent in intents['intents']:
             if tag == intent["tag"]:
                 return jsonify({"reply": random.choice(intent['responses'])})
     
-    # 2. Jika PyTorch Bingung, Tanya Gemini (Jalur Hybrid)
+    # 2. Jika PyTorch Ragu (di bawah 90%), Langsung Tanya Gemini
     try:
-        # Prompt khusus agar Gemini tetap berakting jadi Maestro Jihan
-        prompt_style = f"Kamu adalah Maestro Jihan, asisten musik paling gokil di Sonata Music School. Jawablah pertanyaan ini dengan gaya bahasa yang santai, rocker, dan seru: {user_text}"
+        # Kita beri instruksi ke Gemini agar tetap berakting jadi asisten Sonata
+        prompt_style = (
+            f"Kamu adalah Maestro Jihan, asisten musik paling gokil di Sonata Music School. "
+            f"Gunakan gaya bahasa anak band yang santai, seru, dan informatif. "
+            f"Jika ditanya soal luar musik, tetap jawab dengan gaya rocker. "
+            f"Pertanyaan user: {user_text}"
+        )
         gemini_response = gemini_model.generate_content(prompt_style)
+        
+        # Jika Gemini memberikan jawaban kosong, gunakan fallback
+        if not gemini_response.text:
+            return jsonify({"reply": "Waduh, sinyal gue lagi distorsi nih. Coba tanya lagi, Rocker!"})
+            
         return jsonify({"reply": gemini_response.text})
+        
     except Exception as e:
-        # Jika API Gemini error (misal kuota habis), tampilkan pesan fallback
-        return jsonify({"reply": "Waduh, koneksi gue lagi rada distorsi nih. Coba tanya lagi nanti ya, Rocker!"})
+        print(f"Error Gemini: {e}")
+        return jsonify({"reply": "Gue lagi tuning gitar dulu, mending tanya soal pendaftaran atau jadwal kelas aja!"})
 
 @app.route('/api/predict-vocal', methods=['POST'])
 def predict_vocal():
