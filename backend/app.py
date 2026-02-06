@@ -9,6 +9,7 @@ import os
 import torch
 import random
 import json
+import google.generativeai as genai  # Tambahan: Library Gemini
 
 # Import utilitas AI yang kita buat di ai_env
 from ai_engine import SonataChatNet
@@ -18,6 +19,11 @@ load_dotenv()
 
 app = create_app() 
 CORS(app, resources={r"/*": {"origins": "*"}})
+
+# --- SETUP GOOGLE GEMINI ---
+# Mengambil API KEY dari variabel Railway yang sudah kamu masukkan tadi
+genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
+gemini_model = genai.GenerativeModel('gemini-1.5-flash')
 
 # --- SETUP AI CHATBOT (PYTORCH) ---
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -54,17 +60,19 @@ def get_info():
         ]
     })
 
-# Route Chatbot Baru (Menggunakan PyTorch)
-@app.route('/test-chat', methods=['GET', 'POST']) # Tambahkan GET di sini
+# Route Chatbot (Hybrid: PyTorch + Gemini)
+@app.route('/test-chat', methods=['GET', 'POST'])
 def chat():
     if request.method == 'GET':
         return jsonify({"status": "Chatbot is active! Use POST to talk to me."})
+    
     data = request.json
     user_text = data.get("message")
     
     if not user_text:
         return jsonify({"reply": "Ketik sesuatu dong, Rocker!"}), 400
 
+    # 1. Proses dengan PyTorch (Intents Lokal)
     sentence = tokenize(user_text)
     X = bag_of_words(sentence, chat_data["all_words"])
     X = X.reshape(1, X.shape[0])
@@ -77,12 +85,21 @@ def chat():
     probs = torch.softmax(output, dim=1)
     prob = probs[0][predicted.item()]
 
+    # Jika PyTorch yakin dengan jawabannya (> 0.75)
     if prob.item() > 0.75:
         for intent in intents['intents']:
             if tag == intent["tag"]:
                 return jsonify({"reply": random.choice(intent['responses'])})
     
-    return jsonify({"reply": "Waduh, gue belum belajar soal itu. Coba tanya yang lain, Rocker!"})
+    # 2. Jika PyTorch Bingung, Tanya Gemini (Jalur Hybrid)
+    try:
+        # Prompt khusus agar Gemini tetap berakting jadi Maestro Jihan
+        prompt_style = f"Kamu adalah Maestro Jihan, asisten musik paling gokil di Sonata Music School. Jawablah pertanyaan ini dengan gaya bahasa yang santai, rocker, dan seru: {user_text}"
+        gemini_response = gemini_model.generate_content(prompt_style)
+        return jsonify({"reply": gemini_response.text})
+    except Exception as e:
+        # Jika API Gemini error (misal kuota habis), tampilkan pesan fallback
+        return jsonify({"reply": "Waduh, koneksi gue lagi rada distorsi nih. Coba tanya lagi nanti ya, Rocker!"})
 
 @app.route('/api/predict-vocal', methods=['POST'])
 def predict_vocal():
@@ -122,7 +139,6 @@ def update_student(id):
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
-# Tambahkan ini untuk melihat semua alamat yang terdaftar di terminal
 print("\n--- DAFTAR ALAMAT API KAMU ---")
 for rule in app.url_map.iter_rules():
     print(f"Alamat: {rule.rule} --> Fungsi: {rule.endpoint}")
