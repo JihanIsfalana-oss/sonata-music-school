@@ -86,7 +86,7 @@ def chat():
     prob = probs[0][predicted.item()]
 
     # Jika PyTorch yakin dengan jawabannya (> 0.75)
-    if prob.item() > 0.75:
+    if prob.item() > 0.95:
         for intent in intents['intents']:
             if tag == intent["tag"]:
                 return jsonify({"reply": random.choice(intent['responses'])})
