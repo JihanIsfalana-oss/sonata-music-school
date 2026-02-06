@@ -33,9 +33,7 @@ safety_settings = [
     {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
 ]
 
-# Ubah bagian inisialisasi model di app.py menjadi:
-# Di app.py baris 37, ganti jadi ini saja:
-gemini_model = genai.GenerativeModel('gemini-1.5-flash')
+gemini_model = genai.GenerativeModel('models/gemini-1.5-flash')
 
 # --- MODEL KNN (TETAP DIPERTAHANKAN UNTUK PREDIKSI VOKAL) ---
 X_train_vocal = np.array([[3, 8], [4, 9], [2, 7], [8, 4], [9, 5], [7, 3], [5, 5], [6, 6], [5, 4]])
