@@ -85,35 +85,19 @@ def chat():
     probs = torch.softmax(output, dim=1)
     prob = probs[0][predicted.item()]
 
-    # --- LOGIKA BARU YANG LEBIH PINTAR ---
-    # Kita naikkan batas keyakinan ke 0.90 (90%) agar lebih akurat
-    # Dan kita pastikan tag-nya bukan cuma tebakan random
-    if prob.item() > 0.98:
+    if prob.item() > 0.99 and len(user_text.split()) < 5:
         for intent in intents['intents']:
             if tag == intent["tag"]:
                 return jsonify({"reply": random.choice(intent['responses'])})
     
-    # 2. Jika PyTorch Ragu (di bawah 90%), Langsung Tanya Gemini
+    # PAKSA TANYA GEMINI
     try:
-        # Kita beri instruksi ke Gemini agar tetap berakting jadi asisten Sonata
-        prompt_style = (
-            f"Kamu adalah Maestro Jihan, asisten musik paling gokil di Sonata Music School. "
-            f"Gunakan gaya bahasa anak band yang santai, seru, dan informatif. "
-            f"Jika ditanya soal luar musik, tetap jawab dengan gaya rocker. "
-            f"Pertanyaan user: {user_text}"
-        )
+        prompt_style = f"Kamu adalah Maestro Jihan. Jawab santai & rocker: {user_text}"
         gemini_response = gemini_model.generate_content(prompt_style)
-        
-        # Jika Gemini memberikan jawaban kosong, gunakan fallback
-        if not gemini_response.text:
-            return jsonify({"reply": "Waduh, sinyal gue lagi distorsi nih. Coba tanya lagi, Rocker!"})
-            
         return jsonify({"reply": gemini_response.text})
-        
     except Exception as e:
-        print(f"Error Gemini: {e}")
-        return jsonify({"reply": "Gue lagi tuning gitar dulu, mending tanya soal pendaftaran atau jadwal kelas aja!"})
-
+        return jsonify({"reply": "Gue lagi tuning gitar, tanya soal kelas aja dulu!"})
+    
 @app.route('/api/predict-vocal', methods=['POST'])
 def predict_vocal():
     data = request.json
