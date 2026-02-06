@@ -33,8 +33,9 @@ safety_settings = [
     {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
 ]
 
+# Ubah bagian inisialisasi model di app.py menjadi:
 gemini_model = genai.GenerativeModel(
-    model_name='gemini-1.5-flash',
+    model_name='gemini-1.5-flash-latest', # Tambahkan '-latest' untuk kestabilan
     safety_settings=safety_settings
 )
 
