@@ -1,64 +1,133 @@
 from flask import Flask, jsonify, request
 from src import create_app, db
+from src.models.student import Student 
 from flask_cors import CORS
-from sqlalchemy import text
+from dotenv import load_dotenv
+from sklearn.neighbors import KNeighborsClassifier
+import numpy as np
+import os
 import torch
-import torch.nn as nn
-import json
 import random
+import json
 
-# Load data intents untuk respon umum
-with open('backend/intents.json', 'r') as f:
-    intents_data = json.load(f)
+# Import utilitas AI yang kita buat di ai_env
+from ai_engine import SonataChatNet
+from nltk_utils import bag_of_words, tokenize
+
+load_dotenv()
 
 app = create_app() 
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-# --- FUNGSI SEARCH DATABASE (KHUSUS KURIKULUM) ---
-def search_curriculum(user_message):
-    msg = user_message.lower()
-    
-    # Mapping keyword dari intents.json kamu ke database
-    instruments = {
-        'gitar': 'Gitar', 'drum': 'Drum', 'bass': 'Bass',
-        'piano': 'Piano/Keyboard', 'keyboard': 'Piano/Keyboard',
-        'rock': 'Rock', 'pop': 'Pop', 'blues': 'Blues', 'progressive': 'Progressive'
-    }
-    
-    found_target = next((v for k, v in instruments.items() if k in msg), None)
-    found_year = next((f"Tahun {i}" for i in range(1, 6) if f"tahun {i}" in msg or f"ke-{i}" in msg), None)
+# --- SETUP AI CHATBOT (PYTORCH) ---
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    if found_target and found_year:
-        try:
-            query = text("SELECT module_content, teacher_name FROM curriculum_modules WHERE target_name = :t AND year_level = :y")
-            result = db.session.execute(query, {"t": found_target, "y": found_year}).fetchone()
-            if result:
-                return f"🎸 **Materi {found_target} ({found_year})**: {result[0]} | **Guru**: {result[1]}"
-        except Exception as e:
-            return f"Error DB: {str(e)}"
-    return None
+# Load data dan model chatbot
+with open('intents.json', 'r') as f:
+    intents = json.load(f)
 
-# --- LOGIKA CHATBOT ---
-@app.route('/test-chat', methods=['POST'])
+CHAT_MODEL_FILE = "models/chatbot_model.pth"
+chat_data = torch.load(CHAT_MODEL_FILE)
+chat_model = SonataChatNet(chat_data["input_size"], chat_data["hidden_size"], chat_data["output_size"]).to(device)
+chat_model.load_state_dict(chat_data["model_state"])
+chat_model.eval()
+
+# --- MODEL LAMA (KNN) TETAP DIPERTAHANKAN ---
+X_train_vocal = np.array([[3, 8], [4, 9], [2, 7], [8, 4], [9, 5], [7, 3], [5, 5], [6, 6], [5, 4]])
+y_train_vocal = ['Rock', 'Rock', 'Rock', 'Opera', 'Opera', 'Opera', 'Pop', 'Pop', 'Pop']
+model_vokal = KNeighborsClassifier(n_neighbors=3)
+model_vokal.fit(X_train_vocal, y_train_vocal)
+
+# --- ROUTES ---
+@app.route('/')
+def home():
+    return jsonify({"message": "Backend Sonata Music School Aktif!", "status": "Ready"})
+
+@app.route('/api/info', methods=['POST'])
+def get_info():
+    return jsonify({
+        "vision": "Menjadi sekolah musik pilihan utama yang menghasilkan maestro berbakat.",
+        "contact": "Jl. Musik No. 123, Jakarta",
+        "teachers": [
+            {"id": 1, "name": "Maestro Jihan", "genre": "Rock", "instrument": "Electric Guitar"},
+            {"id": 2, "name": "Prof. Isfalana", "genre": "Pop", "instrument": "Piano"}
+        ]
+    })
+
+# Route Chatbot Baru (Menggunakan PyTorch)
+@app.route('/test-chat', methods=['GET', 'POST']) # Tambahkan GET di sini
 def chat():
+    if request.method == 'GET':
+        return jsonify({"status": "Chatbot is active! Use POST to talk to me."})
     data = request.json
-    user_text = data.get("message", "").lower()
+    user_text = data.get("message")
     
-    # 1. Prioritas: Cek apakah user nanya Kurikulum (Database)
-    curriculum_answer = search_curriculum(user_text)
-    if curriculum_answer:
-        return jsonify({"reply": curriculum_answer})
+    if not user_text:
+        return jsonify({"reply": "Ketik sesuatu dong, Rocker!"}), 400
 
-    # 2. Respon Umum dari intents.json (Simulasi PyTorch Klasifikasi)
-    # Nantinya ini diganti dengan model.predict() setelah kamu train
-    for intent in intents_data['intents']:
-        if 'patterns' in intent: # Pastikan ada patterns (bukan blok curriculum)
-            for pattern in intent['patterns']:
-                if pattern.lower() in user_text:
-                    return jsonify({"reply": random.choice(intent['responses'])})
+    sentence = tokenize(user_text)
+    X = bag_of_words(sentence, chat_data["all_words"])
+    X = X.reshape(1, X.shape[0])
+    X = torch.from_numpy(X).to(device)
 
-    # 3. Default Response jika tidak ada yang cocok
-    return jsonify({"reply": "Yo Rocker! Gue kurang nangkep maksud lo. Coba tanya soal materi Gitar/Drum atau cara Tes Vokal!"})
+    output = chat_model(X)
+    _, predicted = torch.max(output, dim=1)
+    tag = chat_data['tags'][predicted.item()]
+
+    probs = torch.softmax(output, dim=1)
+    prob = probs[0][predicted.item()]
+
+    if prob.item() > 0.75:
+        for intent in intents['intents']:
+            if tag == intent["tag"]:
+                return jsonify({"reply": random.choice(intent['responses'])})
+    
+    return jsonify({"reply": "Waduh, gue belum belajar soal itu. Coba tanya yang lain, Rocker!"})
+
+@app.route('/api/predict-vocal', methods=['POST'])
+def predict_vocal():
+    data = request.json
+    pitch = data.get('pitch')
+    power = data.get('power')
+    prediction = model_vokal.predict([[pitch, power]])
+    return jsonify({
+        "recommended_class": prediction[0],
+        "message": f"Berdasarkan AI, kamu sangat cocok di kelas {prediction[0]}!"
+    })
+
+@app.route('/api/students/<int:id>', methods=['DELETE'])
+def delete_student(id):
+    try:
+        student = db.session.get(Student, id) 
+        if student:
+            db.session.delete(student)
+            db.session.commit()
+            return jsonify({"message": "Data berhasil dihapus"}), 200
+        return jsonify({"error": "Data tidak ditemukan"}), 404
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/students/<int:id>', methods=['PUT'])
+def update_student(id):
+    try:
+        student = db.session.get(Student, id)
+        data = request.json
+        if student:
+            student.name = data.get('name', student.name)
+            db.session.commit()
+            return jsonify({"message": "Data berhasil diupdate"}), 200
+        return jsonify({"error": "Data tidak ditemukan"}), 404
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+# Tambahkan ini untuk melihat semua alamat yang terdaftar di terminal
+print("\n--- DAFTAR ALAMAT API KAMU ---")
+for rule in app.url_map.iter_rules():
+    print(f"Alamat: {rule.rule} --> Fungsi: {rule.endpoint}")
+print("------------------------------\n")
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=8080)
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host='0.0.0.0', port=port)
