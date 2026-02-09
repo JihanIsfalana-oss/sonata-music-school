@@ -73,6 +73,68 @@ CREATE TABLE enrollments (
     FOREIGN KEY (teacher_id) REFERENCES teachers(id),
     FOREIGN KEY (genre_id) REFERENCES genres(id)
 );
+
+CREATE TABLE curriculum_modules (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    category ENUM('Instrument', 'Genre') NOT NULL,
+    target_name VARCHAR(50) NOT NULL, -- Nama Alat atau Nama Genre
+    year_level VARCHAR(20) NOT NULL,  -- Tahun 1 sampai Tahun 5
+    module_content TEXT NOT NULL,
+    teacher_name VARCHAR(150)
+);
+
+-- MODUL INSTRUMEN
+INSERT INTO curriculum_modules (category, target_name, year_level, module_content, teacher_name) VALUES 
+('Instrument', 'Gitar', 'Tahun 1', 'Dasar fingering, tangga nada mayor, dan teknik strumming dasar.', 'Ernest, S.T., M.Sn'),
+('Instrument', 'Gitar', 'Tahun 2', 'Teknik legato, vibrato, dan speed picking tahap awal.', 'Ernest, S.T., M.Sn'),
+('Instrument', 'Gitar', 'Tahun 3', 'Sweep picking, tapping, dan eksplorasi efek pedal.', 'Ernest, S.T., M.Sn'),
+('Instrument', 'Gitar', 'Tahun 4', 'Aransemen solo gitar dan teknik improvisasi modal.', 'Ernest, S.T., M.Sn'),
+('Instrument', 'Gitar', 'Tahun 5', 'Penguasaan fretboard total dan penciptaan karakter suara unik.', 'Ernest, S.T., M.Sn'),
+
+('Instrument', 'Drum', 'Tahun 1', 'Rudiments dasar (single/double stroke) dan koordinasi tangan-kaki.', 'Dr.Ir.Falan, Ph.D'),
+('Instrument', 'Drum', 'Tahun 2', 'Dinamika hi-hat, penggunaan crash/ride, dan double pedal dasar.', 'Dr.Ir.Falan, Ph.D'),
+('Instrument', 'Drum', 'Tahun 3', 'Teknik blast beat, linear drumming, dan kontrol tempo tinggi.', 'Dr.Ir.Falan, Ph.D'),
+('Instrument', 'Drum', 'Tahun 4', 'Eksplorasi sound drum dan teknik rekaman perkusi.', 'Dr.Ir.Falan, Ph.D'),
+('Instrument', 'Drum', 'Tahun 5', 'Solo drum eksperimental dan penguasaan poliritmik kompleks.', 'Dr.Ir.Falan, Ph.D'),
+
+('Instrument', 'Piano/Keyboard', 'Tahun 1', 'Postur tangan, membaca not balok, dan tangga nada diatonis.', 'Yurika, S.Ikom'),
+('Instrument', 'Piano/Keyboard', 'Tahun 2', 'Arpeggio, chord inversions, dan penggunaan teknik pedal.', 'Yurika, S.Ikom'),
+('Instrument', 'Piano/Keyboard', 'Tahun 3', 'Synthesizer sound design dan comping gaya modern.', 'Yurika, S.Ikom'),
+('Instrument', 'Piano/Keyboard', 'Tahun 4', 'Harmoni jazz-pop dan teknik improvisasi melodi.', 'Yurika, S.Ikom'),
+('Instrument', 'Piano/Keyboard', 'Tahun 5', 'Komposisi piano klasik-kontemporer dan manajemen MIDI.', 'Yurika, S.Ikom'),
+
+('Instrument', 'Bass', 'Tahun 1', 'Teknik plucking dua jari dan menjaga tempo pada root note.', 'Ir. Arraya Bey, S.Pd'),
+('Instrument', 'Bass', 'Tahun 2', 'Walking bass lines dasar dan teknik hammer-on/pull-off.', 'Ir. Arraya Bey, S.Pd'),
+('Instrument', 'Bass', 'Tahun 3', 'Teknik slapping dasar dan sinkopasi kompleks.', 'Ir. Arraya Bey, S.Pd'),
+('Instrument', 'Bass', 'Tahun 4', 'Fretboard mastery dan teknik bass solo.', 'Ir. Arraya Bey, S.Pd'),
+('Instrument', 'Bass', 'Tahun 5', 'Advanced slapping, tapping bass, dan sinkronisasi drum-bass.', 'Ir. Arraya Bey, S.Pd');
+
+-- MODUL GENRE
+INSERT INTO curriculum_modules (category, target_name, year_level, module_content, teacher_name) VALUES 
+('Genre', 'Pop', 'Tahun 1', 'Memahami struktur lagu Pop modern dan ear training dasar.', 'Yurika, S.Ikom'),
+('Genre', 'Pop', 'Tahun 2', 'Groove pop, sinkopasi, dan dinamika emosi lagu.', 'Yurika, S.Ikom'),
+('Genre', 'Pop', 'Tahun 3', 'Teknik aransemen backing vocal dan elemen digital.', 'Yurika, S.Ikom'),
+('Genre', 'Pop', 'Tahun 4', 'Songwriting mastery (hook writing) dan produksi DAW.', 'Yurika, S.Ikom'),
+('Genre', 'Pop', 'Tahun 5', 'Branding musisi Pop dan persiapan rilis single.', 'Yurika, S.Ikom'),
+
+('Genre', 'Progressive', 'Tahun 1', 'Dasar-dasar ketukan ganjil (odd meters).', 'Dr.Ir.Falan, Ph.D'),
+('Genre', 'Progressive', 'Tahun 2', 'Struktur lagu panjang (epics) dan perubahan tempo mendadak.', 'Dr.Ir.Falan, Ph.D'),
+('Genre', 'Progressive', 'Tahun 3', 'Odd time signatures kompleks dan sinkopasi berat.', 'Dr.Ir.Falan, Ph.D'),
+('Genre', 'Progressive', 'Tahun 4', 'Teori musik tingkat lanjut untuk komposisi progresif.', 'Dr.Ir.Falan, Ph.D'),
+('Genre', 'Progressive', 'Tahun 5', 'Pembuatan album konsep progresif profesional.', 'Dr.Ir.Falan, Ph.D'),
+
+('Genre', 'Rock', 'Tahun 1', 'Struktur lagu Rock (Verse-Chorus) dan energi panggung.', 'Ir. Arraya Bey, S.Pd'),
+('Genre', 'Rock', 'Tahun 2', 'Penggunaan distorsi dan sejarah Rock n Roll.', 'Ir. Arraya Bey, S.Pd'),
+('Genre', 'Rock', 'Tahun 3', 'Eksplorasi sub-genre (Punk, Metal) dan penulisan lirik.', 'Ir. Arraya Bey, S.Pd'),
+('Genre', 'Rock', 'Tahun 4', 'Produksi musik Rock studio dan live band performance.', 'Ir. Arraya Bey, S.Pd'),
+('Genre', 'Rock', 'Tahun 5', 'Menemukan identitas musik Rock orisinal.', 'Ir. Arraya Bey, S.Pd'),
+
+('Genre', 'Blues', 'Tahun 1', 'Sejarah Blues dan struktur dasar 12-bar blues.', 'Ernest, S.T., M.Sn'),
+('Genre', 'Blues', 'Tahun 2', 'Teknik call and response dalam permainan musik.', 'Ernest, S.T., M.Sn'),
+('Genre', 'Blues', 'Tahun 3', 'Tangga nada Blues dan modulasi antar nada.', 'Ernest, S.T., M.Sn'),
+('Genre', 'Blues', 'Tahun 4', 'Improvisasi emosional dan dinamika soul dalam musik.', 'Ernest, S.T., M.Sn'),
+('Genre', 'Blues', 'Tahun 5', 'Eksplorasi Blues modern dan crossover genre.', 'Ernest, S.T., M.Sn');
+
 -- Input Instrumen & Genre
 INSERT INTO instruments (instrument_name) VALUES ('Drum'), ('Keyboard/Piano'), ('Gitar'), ('Bass');
 INSERT INTO genres (genre_name) VALUES ('Progressive'), ('Pop'), ('Blues'), ('Rock');

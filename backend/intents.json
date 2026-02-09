@@ -216,6 +216,94 @@
         "Siap! Kalau mau ngobrol langsung sama tim manusia kita, chat ke WA: 0812-xxxx-xxxx ya.",
         "Oke Rocker, kalau butuh bantuan admin beneran, lo bisa klik tombol WhatsApp di pojok web."
       ]
+    },
+    {
+      "curriculum_5_years": {
+        "instrument_modules": {
+          "Gitar": {
+            "guru": "Ernest, S.T., M.Sn",
+            "levels": {
+              "Tahun 1": "Dasar fingering, tangga nada mayor, dan teknik strumming dasar.",
+              "Tahun 2": "Teknik legato, vibrato, dan speed picking tahap awal.",
+              "Tahun 3": "Sweep picking, tapping, dan eksplorasi efek pedal.",
+              "Tahun 4": "Aransemen solo gitar dan teknik improvisasi modal.",
+              "Tahun 5": "Penguasaan fretboard total dan penciptaan karakter suara unik."
+            }
+          },
+          "Drum": {
+            "guru": "Dr.Ir.Falan, Ph.D",
+            "levels": {
+              "Tahun 1": "Rudiments dasar (single/double stroke) dan koordinasi tangan-kaki.",
+              "Tahun 2": "Dinamika hi-hat, penggunaan crash/ride, dan double pedal dasar.",
+              "Tahun 3": "Teknik blast beat, linear drumming, dan kontrol tempo tinggi.",
+              "Tahun 4": "Eksplorasi sound drum dan pengenalan teknik rekaman perkusi.",
+              "Tahun 5": "Solo drum eksperimental dan penguasaan poliritmik kompleks."
+            }
+          },
+          "Piano/Keyboard": {
+            "guru": "Yurika, S.Ikom",
+            "levels": {
+              "Tahun 1": "Postur tangan, membaca not balok, dan tangga nada diatonis.",
+              "Tahun 2": "Arpeggio, chord inversions, dan penggunaan teknik pedal.",
+              "Tahun 3": "Synthesizer sound design dan comping gaya modern.",
+              "Tahun 4": "Harmoni jazz-pop dan teknik improvisasi melodi.",
+              "Tahun 5": "Komposisi piano klasik-kontemporer dan manajemen MIDI."
+            }
+          },
+          "Bass": {
+            "guru": "Ir. Arraya Bey, S.Pd",
+            "levels": {
+              "Tahun 1": "Teknik plucking dua jari dan menjaga tempo pada root note.",
+              "Tahun 2": "Walking bass lines dasar dan teknik hammer-on/pull-off.",
+              "Tahun 3": "Teknik slapping dasar dan sinkopasi kompleks.",
+              "Tahun 4": "Fretboard mastery dan teknik bass solo.",
+              "Tahun 5": "Advanced slapping, tapping bass, dan sinkronisasi drum-bass."
+            }
+          }
+        },
+        "genre_modules": {
+          "Rock": {
+            "guru": "Ir. Arraya Bey, S.Pd",
+            "levels": {
+              "Tahun 1": "Struktur lagu Rock (Verse-Chorus) dan energi panggung.",
+              "Tahun 2": "Penggunaan distorsi dan sejarah Rock n Roll.",
+              "Tahun 3": "Eksplorasi sub-genre (Punk, Metal) dan penulisan lirik.",
+              "Tahun 4": "Produksi musik Rock studio dan live band performance.",
+              "Tahun 5": "Menemukan identitas musik Rock orisinal."
+            }
+          },
+          "Pop": {
+            "guru": "Yurika, S.Ikom",
+            "levels": {
+              "Tahun 1": "Memahami struktur lagu Pop modern dan ear training dasar.",
+              "Tahun 2": "Groove pop, sinkopasi, dan dinamika emosi lagu.",
+              "Tahun 3": "Teknik aransemen backing vocal dan elemen digital.",
+              "Tahun 4": "Songwriting mastery (hook writing) dan produksi DAW.",
+              "Tahun 5": "Branding musisi Pop dan persiapan rilis single."
+            }
+          },
+          "Blues": {
+            "guru": "Ernest, S.T., M.Sn",
+            "levels": {
+              "Tahun 1": "Sejarah Blues dan struktur dasar 12-bar blues.",
+              "Tahun 2": "Teknik call and response dalam permainan musik.",
+              "Tahun 3": "Tangga nada Blues dan modulasi antar nada.",
+              "Tahun 4": "Improvisasi emosional dan dinamika soul dalam musik.",
+              "Tahun 5": "Eksplorasi Blues modern dan crossover genre."
+            }
+          },
+          "Progressive": {
+            "guru": "Dr.Ir.Falan, Ph.D",
+            "levels": {
+              "Tahun 1": "Dasar-dasar ketukan ganjil (odd meters).",
+              "Tahun 2": "Struktur lagu panjang (epics) dan perubahan tempo mendadak.",
+              "Tahun 3": "Odd time signatures kompleks dan sinkopasi berat.",
+              "Tahun 4": "Teori musik tingkat lanjut untuk komposisi progresif.",
+              "Tahun 5": "Pembuatan album konsep progresif profesional."
+            }
+          }
+        }
+      }
     }
   ]
 }
