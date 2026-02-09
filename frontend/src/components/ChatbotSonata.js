@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './ChatbotSonata.css'; // Kita akan buat file CSS khusus ini
+import './ChatbotSonata.css'; 
 
 const ChatbotSonata = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
+  // State pesan awal
   const [messages, setMessages] = useState([
     { text: "Yo! Saya Maestro Jihan. Siap menggebrak panggung musik hari ini?", sender: 'maestro' }
   ]);
@@ -11,43 +12,61 @@ const ChatbotSonata = () => {
 
   // Auto scroll ke bawah setiap ada pesan baru
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [messages]);
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isOpen]); // Tambahkan isOpen agar saat dibuka langsung scroll bawah
 
   const toggleChat = () => {
     setIsOpen(!isOpen);
-    // Mencegah scroll pada halaman utama saat chat terbuka
-    document.body.style.overflow = !isOpen ? 'hidden' : 'auto';
+    // Mencegah scroll pada halaman utama saat chat terbuka (opsional, sesuaikan selera)
+    // document.body.style.overflow = !isOpen ? 'hidden' : 'auto'; 
   };
 
   const sendMessage = async () => {
     if (!input.trim()) return;
 
+    // 1. Tampilkan pesan user dulu di layar
     const userMsg = { text: input, sender: 'user' };
     setMessages(prev => [...prev, userMsg]);
-    setInput('');
+    setInput(''); // Kosongkan input
 
-    // --- LOGIKA AUTO-SWITCH URL ---
+    // --- LOGIKA URL (YANG SUDAH DIPERBAIKI) ---
     const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    
+    // PERBAIKAN PENTING:
+    // Backend kamu menggunakan route '/test-chat', jadi production juga harus '/test-chat'
     const apiUrl = isLocal 
-    ? 'http://127.0.0.1:8080/test-chat' // Pakai /test-chat sesuai app.py kamu
-    : 'https://sonata-music-school-production.up.railway.app/api/ai/chat';
+      ? 'http://127.0.0.1:8080/test-chat' 
+      : 'https://sonata-music-school-production.up.railway.app/test-chat'; 
 
     try {
+      // Set loading state dummy (opsional, biar ada feedback)
+      // setMessages(prev => [...prev, { text: "Sedang menyetem gitar...", sender: 'maestro', isTemp: true }]);
+
       const response = await fetch(apiUrl, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: input }),
+        headers: { 
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ message: userMsg.text }),
       });
+
       const data = await response.json();
       
-      // Pastikan mengambil key yang benar dari backend kamu (response atau reply)
-      setMessages(prev => [...prev, { text: data.response || data.reply, sender: 'maestro' }]);
+      // Ambil jawaban dari key "reply" sesuai app.py
+      const replyText = data.reply || "Mic-nya mati, cek koneksi lagi bro!";
+
+      setMessages(prev => [...prev, { text: replyText, sender: 'maestro' }]);
+      
     } catch (error) {
       console.error("Chat Error:", error);
-      setMessages(prev => [...prev, { text: "Koneksi ke backstage terputus!", sender: 'maestro' }]);
+      setMessages(prev => [...prev, { text: "Waduh, koneksi ke backstage (server) putus! Coba refresh.", sender: 'maestro' }]);
+    }
+  };
+
+  // Handle enter key
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      sendMessage();
     }
   };
 
@@ -86,7 +105,7 @@ const ChatbotSonata = () => {
             autoFocus
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+            onKeyDown={handleKeyPress} // Ganti onKeyPress ke onKeyDown (lebih modern)
             placeholder="Tulis pesan untuk Maestro..."
           />
           <button onClick={sendMessage}>KIRIM 🤘</button>
