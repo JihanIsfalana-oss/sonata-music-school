@@ -51,18 +51,40 @@ model_vokal.fit(X_train_vocal, y_train_vocal)
 # --- FUNGSI SEARCH DATABASE (FITUR KURIKULUM) ---
 def get_curriculum_db(msg):
     msg = msg.lower()
-    targets = {'gitar': 'Gitar', 'drum': 'Drum', 'piano': 'Piano/Keyboard', 'keyboard': 'Piano/Keyboard', 'bass': 'Bass'}
+    # Mapping input user ke nama kolom target_name di SQL
+    targets = {
+        'gitar': 'Gitar', 
+        'drum': 'Drum', 
+        'piano': 'Piano/Keyboard', 
+        'keyboard': 'Piano/Keyboard', 
+        'bass': 'Bass',
+        'rock': 'Rock',
+        'pop': 'Pop',
+        'blues': 'Blues',
+        'progressive': 'Progressive'
+    }
     
+    # Cari instrumen/genre di dalam pesan
     found_target = next((v for k, v in targets.items() if k in msg), None)
-    found_year = next((f"Tahun {i}" for i in range(1, 6) if f"tahun {i}" in msg or f"ke-{i}" in msg), None)
+    
+    # Perbaikan: Cari angka saja (1-5) agar lebih fleksibel dibanding cari "tahun 1"
+    found_year = None
+    for i in range(1, 6):
+        if str(i) in msg:
+            found_year = f"Tahun {i}"
+            break
 
     if found_target and found_year:
         try:
+            # Query sesuai tabel curriculum_modules di sonata_db.sql
             query = text("SELECT module_content, teacher_name FROM curriculum_modules WHERE target_name = :t AND year_level = :y")
             result = db.session.execute(query, {"t": found_target, "y": found_year}).fetchone()
+            
             if result:
                 return f"🎸 Materi {found_target} {found_year}: {result[0]} (Guru: {result[1]})"
-        except: return None
+        except Exception as e:
+            print(f"Error Database: {e}")
+            return None
     return None
 
 # --- ROUTES ---
