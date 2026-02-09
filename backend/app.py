@@ -125,4 +125,25 @@ def chat():
     
     return jsonify({"reply": "Waduh, gue belum belajar itu. Coba tanya soal materi Gitar atau Drum Tahun 1-5!"})
 
+@app.route('/curriculum', methods=['GET'])
+def get_all_curriculum():
+    try:
+        # Mengambil semua data modul kurikulum dari SQL
+        query = text("SELECT category, target_name, year_level, module_content, teacher_name FROM curriculum_modules")
+        results = db.session.execute(query).fetchall()
+        
+        # Format ke JSON
+        curriculum_list = []
+        for r in results:
+            curriculum_list.append({
+                "category": r[0],
+                "target_name": r[1],
+                "year_level": r[2],
+                "module_content": r[3],
+                "teacher_name": r[4]
+            })
+        return jsonify(curriculum_list)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 # ... (Route lainnya predict_vocal, delete_student tetap sama) ...
