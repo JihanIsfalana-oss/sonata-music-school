@@ -18,7 +18,7 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 
 # --- SETUP GOOGLE GEMINI ---
 genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
-gemini_model = genai.GenerativeModel('models/gemini-1.5-flash')
+gemini_model = genai.GenerativeModel('gemini-1.5-flash')
 
 # --- MODEL KNN UNTUK VOKAL ---
 X_train_vocal = np.array([[3, 8], [4, 9], [2, 7], [8, 4], [9, 5], [7, 3], [5, 5], [6, 6], [5, 4]])
