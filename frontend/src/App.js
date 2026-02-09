@@ -4,6 +4,7 @@ import Home from './components/Home';      // Pastikan path sesuai
 import Register from './components/Register'; // Pastikan path sesuai
 import Students from './components/Students'; // Pastikan path sesuai
 import ChatbotSonata from './components/ChatbotSonata';
+import Curriculum from './components/Curriculum';
 import './App.css';
 
 function App() {
@@ -57,8 +58,10 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path="/students" element={<Students />} />
+          <Route path="/curriculum" element={<Curriculum />} />
         </Routes>
       </div>
+
 
       <footer className="footer-rock">
         <p>

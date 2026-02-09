@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import 'Curriculum.css';
 
 const Curriculum = () => {
   const [modules, setModules] = useState([]);
@@ -23,26 +24,22 @@ const Curriculum = () => {
   if (loading) return <div className="text-white text-center">Tuning instruments... 🎸</div>;
 
   return (
-    <div className="bg-black min-h-screen p-8 text-white font-sans">
-      <header className="mb-12 border-b-2 border-red-600 pb-4">
-        <h1 className="text-4xl font-bold uppercase tracking-widest">Mastery Curriculum</h1>
-        <p className="text-gray-400">Peta jalan 5 tahun menuju maestro musik profesional.</p>
+    <div className="curriculum-container">
+      <header className="curriculum-header">
+        <h1>Mastery Curriculum</h1>
+        <p>Sonata Music School Production Level</p>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="curriculum-grid">
         {modules.map((item, index) => (
-          <div key={index} className="bg-zinc-900 border border-zinc-800 p-6 rounded-lg hover:border-red-500 transition-all group">
-            <div className="flex justify-between items-start mb-4">
-              <span className="bg-red-600 text-xs px-2 py-1 rounded uppercase font-bold">{item.category}</span>
-              <span className="text-zinc-500 text-sm">{item.year_level}</span>
-            </div>
-            <h3 className="text-2xl font-bold mb-2 group-hover:text-red-400">{item.target_name}</h3>
-            <p className="text-gray-400 text-sm mb-4 leading-relaxed">
-              "{item.module_content}"
-            </p>
-            <div className="pt-4 border-t border-zinc-800">
-              <p className="text-xs text-zinc-500 uppercase tracking-tighter">Mentor</p>
-              <p className="text-sm font-medium">{item.teacher_name}</p>
+          <div key={index} className="curriculum-card">
+            <span className="year-label">{item.year_level}</span>
+            <span className="badge-category">{item.category}</span>
+            <h3>{item.target_name}</h3>
+            <p className="module-text">{item.module_content}</p>
+            <div className="teacher-info">
+              <div className="teacher-label">Mentor</div>
+              <div className="teacher-name">{item.teacher_name}</div>
             </div>
           </div>
         ))}
