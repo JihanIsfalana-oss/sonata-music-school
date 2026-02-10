@@ -50,6 +50,7 @@ function App() {
           <Link to="/">Home</Link>
           <Link to="/register">Join Class</Link>
           <Link to="/students">Students</Link>
+          <Link to="/curriculum">Curriculum</Link>
         </div>
       </nav>
 

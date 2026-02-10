@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import 'Curriculum.css';
+import './Curriculum.css';
 
 const Curriculum = () => {
   const [modules, setModules] = useState([]);
